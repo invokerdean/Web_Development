@@ -17,3 +17,17 @@
    (function foo(){...}())
 ```
 第一个()将函数表达式,第二个()执行了这个函数，立即执行函数表达式也可以传递参数
+
+> IIFE函数应用之一是用于修正undefined值被异常覆盖的场景（少见），通过(function foo(undefined){})()即可在代码块中安全访问undefined
+
+>另一应用是调换代码运行顺序，例如
+```
+(function IIFE(def){
+    def();
+})(function def(){
+    console.log('a');
+})//a
+def();//Uncaught ReferenceError: def is not defined
+```
+
+#### 3.4块作用域
