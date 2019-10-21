@@ -31,3 +31,26 @@ def();//Uncaught ReferenceError: def is not defined
 ```
 
 #### 3.4块作用域
+1. with是块作用域的一个例子（从对象中创建的块作用域仅在with声明中有效）
+> 'with'语句將某个对象添加到作用域链的顶部，如果在statement中有某个未使用命名空间的变量，跟作用域链中的某个属性同名，则这个变量将指向这个属性值。如果沒有同名的属性，则将拋出ReferenceError异常。
+
+2. try/catch(ES3)的catch分句会创建一个块作用域，其中声明的变量仅在catch内部有效
+```
+try{
+   undefined();
+}catch(err){
+   console.log(err);//TypeError: undefined is not a function
+}
+console.log(err);//ReferenceError: err is not defined
+```
+3. let关键字将变量绑定到任意作用域中，通常是{...}内部，即隐式劫持了所在作用域
+>可以通过在内部{...}显式创建块，来避免对外部块的影响;let没有变量提升，声明的代码在运行前并不存在
+
+>应用：gc（垃圾收集中），由于事件监听的回调函数会产生一个覆盖全局的闭包，保留全局变量，因此会阻碍垃圾收集，可以将需要回收的变量用{...}包裹
+
+4. const也可以创建块作用域
+>其值是固定的，任何修改值的操作都会引起错误
+
+
+
+
