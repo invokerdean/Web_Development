@@ -80,3 +80,49 @@ bar.doSomething();//cool
 bar.doAnother();//1!2!3
 console.log(foo===bar);
 ```
+> 模块也是普通的函数，因此可以接受参数
+
+* 单例模式：利用IIFE
+var foo=(function CoolModule(){...})()
+> 通过在模块实例内部保留对api对象的内部引用，可以从内部进行修改，现代的模块大多数依赖加载器/管理器本质上都是将模块定义封装进一个友好的API
+
+```
+var MyModule=(function Manager(){
+    var modules={};
+    function define(name,deps,impl){//名称，依赖，模块api
+        for(var i=0;i<deps.length;i++){
+            deps[i]=modules[deps[i]];//deps为依赖列表
+        }
+        modules[name]=impl.apply(impl,deps);
+    }
+    function get(name){
+        return modules[name];
+    }
+    return {
+        define,
+        get
+    }
+})();
+MyModule.define('bar',[],function(){
+    function hello(who){
+        return 'hello '+who;
+    }
+    return {
+        hello
+    };
+});
+var bar=MyModule.get("bar");
+console.log(bar.hello('doctor'));//hello doctor
+MyModule.define('foo',['bar'],function(){
+    var hungry='John';
+    function awesome(){
+        console.log(bar.hello(hungry).toUpperCase());
+    }
+    return{
+        awesome
+    }
+})
+var foo=MyModule.get("foo");
+foo.awesome();//HELLO JOHN
+```
+
