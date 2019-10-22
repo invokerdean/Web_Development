@@ -70,3 +70,13 @@ foo.doAnother()://1!2!3
 可以将这个对象返回值看做本质上是模块的公共API
 > 最常见使用模块模式的方法是模块暴露，模块中返回对象并非必须，也可以直接返回一个内部函数
 
+```
+//每次调用会创建一个新的模块实例
+var foo=CoolModule();
+foo.doSomething();//cool
+foo.doAnother();//1!2!3
+var bar=CoolModule();
+bar.doSomething();//cool
+bar.doAnother();//1!2!3
+console.log(foo===bar);
+```
