@@ -34,7 +34,7 @@ document.write('>');
 ```
 
 #### 防御
-1. HttpOnly：
+1. HttpOnly：严格地说，HttpOnly并非为了对抗XSS——HttpOnly解决的是XSS后的Cookie劫持攻击。HttpOnly现在已经基本支持各种浏览器，但是HttpOnly只是有助于缓解XSS攻击，但仍然需要其他能够解决XSS漏洞的方案。
 ```
   // koa
   ctx.cookies.set(name, value, {
