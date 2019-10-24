@@ -15,7 +15,7 @@ DOM xss
 
 #### 实现
 例如：典型的表单圈套
-```javascript
+```html
 <div>
     <img src='...gif' alt='拍卖会'>
 </div>
