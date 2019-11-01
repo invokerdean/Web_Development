@@ -64,9 +64,25 @@ obj1.obj2.foo();//绑定的是obj2
  ```
  
  #### 2.6例外
+ 
  null，undefined传入call，apply，bind时，绑定的是全局对象（场景：展开数组，或者this不关心，取一个null站位）
  安全的绑定：
  ```
  var o=Object.create(null);
- foo.apply(0,[2,3]);
+ foo.apply(o,[2,3]);
  ```
+ 间接引用使用默认绑定
+ 软绑定(略)
+ 
+ #### 2.7this词法
+ 箭头函数：不适用以上规则，根据外层作用域决定this，箭头函数的绑定无法被修改
+ ```
+ function foo(){
+  return (a)=>{
+   console.log(this.a);
+  }
+ }
+ var bar=foo.call(obj);
+ bar.call(obj2)//绑定的仍然是obj
+ ```
+ 常用于回调函数，本质是用词法作用域取代this机制。
