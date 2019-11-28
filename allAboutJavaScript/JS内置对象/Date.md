@@ -60,4 +60,21 @@ var a=new Date(year, monthIndex [, day [, hours [, minutes [, seconds [, millise
 * Date.prototype.getUTCMonth()
 * Date.prototype.getUTCSeconds()
 * Date.prototype.getTimezoneOffset() 方法返回协调世界时（UTC）相对于当前时区的时间差值，单位为分钟。
+## 5.奇淫技巧
+获取每个月天数：
+* 可以利用js中Date日期自动计算机制
+```
+//1.
+function getDays(year, month) {
+  if (month === 1) return new Date(year, month, 29).getMonth() === 1 ? 29 : 28;
+  return new Date(year, month, 31).getMonth() === month ? 31 : 30;
+}
+```
+
+* new Date()的第三个参数传小于1的值会怎么样了，比如传0，我们就获得了上个月的最后一天，当然传负数也没问题,-1即为倒数第二天
+```
+function getDays(year, month) {
+  return new Date(year, month + 1, 0).getDate();
+}
+```
 
