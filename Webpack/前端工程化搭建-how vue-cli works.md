@@ -34,7 +34,7 @@ module.exports={
   module:{
     rules:[
       {
-        test:/.vue$/,
+        test:/\.vue$/,
         lodaer:'vue-loader'
       }
     ]
@@ -59,3 +59,77 @@ module.exports={
 1. webpack处理依赖的代码
 2. vue的源码（尚未分离处理）
 3. ...开发代码
+
+#### 5.*项目加载各种静态资源和css预处理器*
+###### 静态资源
+```JavaScript
+//webpack.config.js
+const path=require('path');
+module.exports={
+  entry:path.join(__dirname,'src/index.js'),
+  ouput:{
+    filename:'bundle.js',
+    path:path.join(__dirname,'dist'),//新建一个当前目录下的dist文件夹
+  }
+  module:{
+    rules:[
+      {
+        test:/\.vue$/,
+        lodaer:'vue-loader'
+      },
+      {
+        test:/\.css$/
+        use:[
+          'style-loader',
+          'css-loader',
+        ]
+      },
+      {
+        test:/\.(jpeg|gif|png|svg|jpg)&/,
+        use:[
+          {
+            loader:'url-lodaer',//是file-loader的封装，可以将图片转换成base64代码,install时需要安装file-loader依赖
+            options:{
+              limit：1024,//如果小于1024，就转码保存到代码，
+              name:'[name]-aaa.[ext]'//输出文件名
+            }
+          },
+        ],
+      },
+    ]
+  }
+}
+```
+```JavaScript
+//index.js
+import '.../test.css'
+import '.../bg.jpeg'
+```
+```css
+//test.css
+body {
+  color:red;
+  background-image:url('../images/done.svg');
+}
+```
+输出：
+/dist:bg-aaa.jpeg,bundle.js
+```
+"....background-image:url("+__webpack_require__(17)+"...""//代码编号
+
+//17号代码为done.svg的base64编码
+```
+> 可见css中的图片依赖也会被一起打包
+###### css预处理器
+```JavaScript
+//预处理器打包，以stylus为例
+{
+  test:/\.styl$/,
+  use：[
+    'style-loader',//用于写入到html
+    'css-loaer',//最终会变成css文件来处理
+    'stylus-loader'//只处理styl文件，转化成css代码，每层只负责自己的事
+  ]
+}
+```
+#### 6.*devServer*
