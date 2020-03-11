@@ -18,7 +18,7 @@ const root=document.createElement('div');
 document.body.append(root);
 
 new Vue({
-  render:(h)=>h(app)//h参数是vue里面的createElement
+  render:(h)=>h(app)//h参数是vue里面的createElement，当数据变化时触发render方法，重新生成HTML
 }).$mount(root)//挂载到root节点
 ```
 ```JavaScript
@@ -134,7 +134,7 @@ body {
 ```
 #### 6.*devServer*
 **是什么**：webpack-dev-server包
-```JavaScript
+```json
 //package.json
 {
   //...
@@ -152,7 +152,7 @@ body {
 * Mac:NODE_ENV = 'production'即可读取环境变量
 * Windows:使用set方式
 * 跨平台:使用cross-env包:
-```
+```json
 //package.json
 {
   //...
