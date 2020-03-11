@@ -18,7 +18,7 @@ const root=document.createElement('div');
 document.body.append(root);
 
 new Vue({
-  render:(h)=>h(app)//h参数是vue里面的createapp
+  render:(h)=>h(app)//h参数是vue里面的createElement
 }).$mount(root)//挂载到root节点
 ```
 ```JavaScript
@@ -133,3 +133,70 @@ body {
 }
 ```
 #### 6.*devServer*
+**是什么**：webpack-dev-server包
+```JavaScript
+//package.json
+{
+  //...
+  //设置运行脚本
+  "script": {
+    //...
+    "build":"webpack --config webpack.config.js",
+    "dev":"webpack-dev-server --config webpack.config.js"//专门用于开发环境
+  }
+  //...
+}
+```
+> 此时需要给script设置环境变量来标识是什么环境：开发环境/生产环境...
+
+* Mac:NODE_ENV = 'production'即可读取环境变量
+* Windows:使用set方式
+* 跨平台:使用cross-env包:
+```
+//package.json
+{
+  //...
+  "script": {
+    //...
+    "build":"cross-env NODE_ENV=production webpack --config webpack.config.js",
+    "dev":"cross-env NODE_ENV=development webpack-dev-server --config webpack.config.js"//专门用于开发环境
+  }
+  //...
+}
+```
+```JavaScript
+
+//webpack.config.js
+const HTMLPlugin=require('html-webpack-plugin');//此时需要HTML-webpack-plugin，包含bundle.js，否则跑不了
+const webpack=require('webpack')
+const isDev=process.env.NODE_ENV==='development'//启动脚本中设置的环境变量都保存在process.env里
+
+//module.exports={
+const config={//保存配置
+  target:'web'//?
+  //...
+  plugin:[
+    new webpack.DefinePlugin({
+      'process.env':{
+        NODE_ENV:isDev?'"development"':'"production"',
+       }
+    }), //便于源码和webpack调用process.env，用于对不同环境使用不同版本的框架
+    new HTMLPlugin(),
+  ]
+}
+
+if(isDev){
+  config.devtool='#cheap-module-eval-source-map';//调试代码，在浏览器中映射成编译前的源代码
+  config.devServer={
+    port:8000,
+    host:'0.0.0.0',
+    overlay:{
+      errors:true//webpack编译错误显示到网页上
+    }
+    //open:true 运行脚本自动打开浏览器
+    //historyFallback:{} 单页应用定位路由到index.html
+    hot:true//热更新，修改代码只重新渲染该部分组件，配合插件
+  }
+}
+module.exports=config
+```
